@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/themes/color.css">
+    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/demo/demo.css">
+    <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
+
+    <title>Prueba</title>
+</head>
+
+<body>
+    <h2>Basic CRUD Application</h2>
+    <p>Click the buttons on datagrid toolbar to do crud actions.</p>
+    <!-- TAL Y COMO ESTA ESCRITO EN EL CAMPO DE LA TABLA|| MAYUSCULAS Y MINUSCULAS -->
+    <table id="dg" title="My Users" class="easyui-datagrid" style="width:700px;height:250px" toolbar="#toolbar"
+        pagination="true" rownumbers="true" fitColumns="true" singleSelect="true">
+        <thead>
+            <tr>
+                <th field="cedula" width="50">CEDULA</th>
+                <th field="nombre" width="50">NOMBRE</th>
+                <th field="apellido" width="50">APELLIDO</th>
+                <th field="direccion" width="50">DIRECCION</th>
+                <th field="telefono" width="50">TELEFONO</th>
+            </tr>
+        </thead>
+    </table>
+    <div id="toolbar">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">New
+            User</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true"
+            onclick="editUser()">Edit User</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true"
+            onclick="destroyUser()">Remove User</a>
+    </div>
+
+    <div id="dlg" class="easyui-dialog" style="width:400px" data-options="closed:true,modal:true,border:'thin',buttons:'#dlg-buttons'">
+        <form id="fm" method="post" novalidate style="margin:0;padding:20px 50px">
+            <h3>User Information</h3>
+            <div style="margin-bottom:10px">
+                <input name="cedula" class="easyui-textbox" required="true" label="Cedula:" style="width:100%">
+            </div>
+            <div style="margin-bottom:10px">
+                <input name="nombre" class="easyui-textbox" required="true" label="Nombre:" style="width:100%">
+            </div>
+            <div style="margin-bottom:10px">
+                <input name="apellido" class="easyui-textbox" required="true" label="Apellido:" style="width:100%">
+            </div>
+            <div style="margin-bottom:10px">
+                <input name="direccion" class="easyui-textbox" required="true" label="Direccion:" style="width:100%">
+            </div>
+            <div style="margin-bottom:10px">
+                <input name="telefono" class="easyui-textbox" required="true" label="Telefono:" style="width:100%">
+            </div>
+
+        </form>
+    </div>
+    <div id="dlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()"
+            style="width:90px">Guardar</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+            onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancelar</a>
+    </div>
+    <script type="text/javascript">
+        var url;
+
+        $(document).ready(function() {
+            // Define the URL for fetching data from the server using GET request
+            url = '../../controllers/estudianteController.php';
+
+            // Load data into the table when the page loads
+            $('#dg').datagrid({
+                url: url,
+                method: 'GET'
+            });
+        });
+
+        function newUser() {
+            $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'New User');
+            $('#fm').form('clear');
+            url = '../../controllers/estudianteController.php';
+        }
+
+        function editUser() {
+            var row = $('#dg').datagrid('getSelected');
+            if (row) {
+                $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'Edit User');
+                $('#fm').form('load', row);
+                url = '../../controllers/estudianteController.php';
+            }
+        }
+
+        function saveUser() {
+            $('#fm').form('submit', {
+                url: url,
+                method: 'POST',
+                onSubmit: function() {
+                    return $(this).form('validate');
+                },
+                success: function(result) {
+                    var result = eval('(' + result + ')');
+                    if (result.errorMsg) {
+                        $.messager.show({
+                            title: 'Error',
+                            msg: result.errorMsg
+                        });
+                    } else {
+                        $('#dlg').dialog('close'); // close the dialog
+                        $('#dg').datagrid('reload'); // reload the user data
+                    }
+                }
+            });
+        }
+
+        function destroyUser() {
+            var row = $('#dg').datagrid('getSelected');
+            if (row) {
+                $.messager.confirm('Confirm', 'Are you sure you want to destroy this user?', function(r) {
+                    if (r) {
+                        $.ajax({
+                            url: '../../controllers/estudianteController.php?cedula=' + row.cedula,
+                            type: 'DELETE',
+                            success: function(result) {
+                                var result = eval('(' + result + ')');
+                                if (!result.errorMsg) {
+                                    $('#dg').datagrid('reload'); // reload the user data
+                                } else {
+                                    $.messager.show({ // show error message
+                                        title: 'Eliminado',
+                                        msg: result.errorMsg
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+
+</html>
