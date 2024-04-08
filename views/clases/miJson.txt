@@ -1,0 +1,9 @@
+{
+    "cedula": "2101031025",
+    "nombre": "Patricio",
+    "apellido": "Jimenez",
+    "edad": 20,
+    "sexo": "M",
+    "celular": "0990862306",
+    "estudios" : [{"primaria" : "Francisco de Asis"}, {"secundaria": "Shushufindi"}, {"universidad": "UTA"}]
+}

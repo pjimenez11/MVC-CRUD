@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quinto</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="ajax.js"></script>
+    <script>
+        let cadena = "Hola";
+        let numero = 1;
+        console.log(cadena);
+        console.log(numero);
+        //Array
+        let arraySimple = ['Mundo','Hola','2'];
+        console.log(arraySimple[0]);
+        var objeto = '{ "nombre":"Adrian","apellido": "Terreneitor"}';
+        console.log(objeto.nombre);
+        const PokemonApi = async ()=> {
+            let pokemon = await fetch ("https://pokeapi.co/api/v2/pokemon/ditto");
+            let resp = await pokemon.json();
+            console.log(resp.name);
+        }
+        PokemonApi();
+        let boolean = null;
+        console.log(boolean);
+        //Cambiar de un string a un Json    
+        let json = JSON.parse(objeto);
+        console.log(json);  
+
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

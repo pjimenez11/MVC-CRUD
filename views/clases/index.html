@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="ajax.js"></script>
+  </head>
+  <script>
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.open("GET", "miJson.txt");
+    xhttp.send();
+
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState === 4 && xhttp.status === 200) {
+        console.log("Valor de esta propiedad status", this.status);
+        console.log("Valor de esta propiedad Ready", this.readyState);
+        let resp = JSON.parse(xhttp.responseText);
+        let p = document.getElementById("text");
+        p.textContent = JSON.stringify(resp);
+        console.log(resp);
+      }
+    };
+  </script>
+  <body>
+    <div><p id="text"></p></div>
+  </body>
+</html>
